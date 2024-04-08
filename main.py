@@ -20,10 +20,6 @@ def main():
     SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 
 
-    # **************************************************************************************
-    # * Connect to a database and read the latest message stored and TPL namelist.         *
-    # **************************************************************************************
-
     # initialise supabase connection
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
     all_messages = (supabase.table('chat_messages')
@@ -31,11 +27,7 @@ def main():
                     .execute()
                     )
     latest_message_id = max(row['msg_id'] for row in all_messages.data)
-
-
-    # **************************************************************
-    # * Connect to telegram and extract latest chat messages       *
-    # **************************************************************
+    
     app = telegram_client(
         name="telegram_session",
         session_string=session_string,
@@ -60,6 +52,7 @@ def main():
     # uploads the new messages and new members
     if new_chat_messages:
         upload_messages = supabase.table("chat_messages").insert(new_chat_messages).execute()
+
     if new_members_joined:
         upload_members = supabase.table("member_list").insert(new_members_joined).execute()
 

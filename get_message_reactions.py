@@ -32,17 +32,15 @@ def get_message_reactions(app, tpl_group_id, messages, namelist):
                 for reactor in reactions_info:
                     if reactor['user_id'] is not None:
                         try:
-                            reactor['username'] = namelist[namelist['user_id'] == reactor['user_id']]['username'].item()
-                            # reactor['username'] = namelist[reactor['user_id']]['username']
-                            # reactor['full_name'] = namelist[reactor['user_id']]['full_name']
+                            reactor['username'] = namelist[reactor['user_id']]['username']
+                            reactor['full_name'] = namelist[reactor['user_id']]['full_name']
                         except KeyError:
                             # Handle members with no usernames aka KeyError
                             raise KeyError(f"User ID {reactor['user_id']} not found in namelist")
                 reactions += reactions_info
-
             except errors.exceptions.bad_request_400.MsgIdInvalid as e:
                 # Handle the MsgIdInvalid error when there are no reactions to the message
-                print(e)
+                print(f"{message.id}: {e}")
 
                 continue
 
